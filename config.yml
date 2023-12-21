@@ -1,0 +1,18 @@
+# Enables/disables developer mode
+# Simplifies running app in developer environment, mocking some external dependencies
+# available values yes|no
+developmentMode: "${DEVELOPMENTMODE}"
+swaggerGui: "${SWAGGER_GUI}"
+# Mock identity provider settings, only has effect when developmentMode is set to true
+mockIdentity:
+  key_for_user_1: 1
+  key_for_user_2: 2
+# Link to auth provider url, which is used to fetch user_id based on a PHPSESSID key
+# that is typically passed via cookies
+authProviderUrl: "http://gusher-api${namespace}/identity.php"
+# Database settings
+#dbAddr: "host.docker.internal:3306"
+dbAddr: "127.0.0.1:3307"
+dbUser: "root"
+dbPass: ""
+dbName: "gusher"

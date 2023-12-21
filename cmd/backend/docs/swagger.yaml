@@ -1,0 +1,568 @@
+basePath: /v3
+definitions:
+  main.ListResponse-main_ProtocolResponseAdmin:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/main.ProtocolResponseAdmin'
+        type: array
+      total:
+        type: integer
+    type: object
+  main.ListResponse-main_StartupResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/main.StartupResponse'
+        type: array
+      total:
+        type: integer
+    type: object
+  main.ProtocolProgress:
+    properties:
+      complete:
+        items:
+          $ref: '#/definitions/main.TaskResponse'
+        type: array
+      id:
+        example: 1
+        type: integer
+      name:
+        example: FinTech
+        type: string
+      pending:
+        items:
+          $ref: '#/definitions/main.TaskResponse'
+        type: array
+      total:
+        type: integer
+    type: object
+  main.ProtocolResponse:
+    properties:
+      id:
+        example: 1
+        type: integer
+      name:
+        example: FinTech
+        type: string
+      sample_tasks:
+        items:
+          $ref: '#/definitions/protocol.Task'
+        type: array
+      total:
+        example: 30
+        type: integer
+    type: object
+  main.ProtocolResponseAdmin:
+    properties:
+      id:
+        example: 1
+        type: integer
+      name:
+        example: FinTech
+        type: string
+      tasks:
+        items:
+          $ref: '#/definitions/protocol.Task'
+        type: array
+    type: object
+  main.StartupResponse:
+    properties:
+      applicants:
+        example: 333
+        type: integer
+      avatar:
+        $ref: '#/definitions/startup.Image'
+      company_type:
+        example: fintech
+        type: string
+      cover:
+        $ref: '#/definitions/startup.Image'
+      deadline:
+        example: 10
+        type: integer
+      description:
+        example: Greatest startup engine
+        type: string
+      equity_min:
+        example: 1
+        type: number
+      equity_total:
+        example: 25
+        type: number
+      followers:
+        example: 100
+        type: integer
+      icon:
+        $ref: '#/definitions/startup.Image'
+      id:
+        example: 1
+        type: integer
+      logo:
+        $ref: '#/definitions/startup.Image'
+      name:
+        example: Gusher
+        type: string
+      pitch:
+        example: Once upon a time in a galaxy far-far away...
+        type: string
+      title:
+        example: Gusher
+        type: string
+      topics:
+        items:
+          $ref: '#/definitions/startup.Topic'
+        type: array
+      user_description:
+        example: Hyperspace Pilot
+        type: string
+      user_equity:
+        example: 10
+        type: number
+      user_title:
+        example: Founder
+        type: string
+      vanity:
+        example: gusher
+        type: string
+      video:
+        $ref: '#/definitions/startup.Video'
+      views:
+        example: 76633
+        type: integer
+    type: object
+  main.TaskResponse:
+    properties:
+      content:
+        example: html content...
+        type: string
+      id:
+        example: 123
+        type: integer
+      startupRole:
+        example: developer
+        type: string
+      title:
+        example: Develop company website
+        type: string
+    type: object
+  main.assignProtocolRequest:
+    properties:
+      protocol_id:
+        type: integer
+    type: object
+  main.assignProtocolRolesRequest:
+    properties:
+      protocol_roles:
+        items:
+          type: string
+        type: array
+    type: object
+  main.completeTaskRequest:
+    properties:
+      complete:
+        type: boolean
+    type: object
+  protocol.Protocol:
+    properties:
+      name:
+        example: SAAS Company
+        type: string
+      tasks:
+        items:
+          $ref: '#/definitions/protocol.Task'
+        type: array
+    type: object
+  protocol.Task:
+    properties:
+      complete_fn:
+        example: websiteDeveloped
+        type: string
+      content:
+        example: html content...
+        type: string
+      dependsOn:
+        example:
+        - 123
+        - 444
+        - 653
+        - 4
+        items:
+          type: integer
+        type: array
+      id:
+        example: 123
+        type: integer
+      startupRole:
+        example: developer
+        type: string
+      title:
+        example: Develop company website
+        type: string
+    type: object
+  startup.Image:
+    properties:
+      resized:
+        type: string
+      src:
+        type: string
+    type: object
+  startup.Topic:
+    properties:
+      featured:
+        type: integer
+      id:
+        type: integer
+      industry:
+        type: integer
+      interest:
+        type: integer
+      name:
+        type: string
+      skill:
+        type: integer
+    type: object
+  startup.Video:
+    properties:
+      job:
+        type: string
+      src:
+        type: string
+      src720:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Gusher backend api
+  title: Gusher backend API
+  version: "3.0"
+paths:
+  /admin/protocols:
+    get:
+      description: |-
+        This will list all available protocols in system including their corresponding tasks and their dependencies.
+        Method should not be used by regular users, because we do not want to allow them to see full list of tasks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Full list of protocols
+          schema:
+            $ref: '#/definitions/main.ListResponse-main_ProtocolResponseAdmin'
+        "500":
+          description: Error message
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Shows list of available protocols
+      tags:
+      - protocol
+      - admin
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Protocol body
+        in: body
+        name: protocol
+        required: true
+        schema:
+          $ref: '#/definitions/protocol.Protocol'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Error message
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Creates or updates protocol in database
+      tags:
+      - protocol
+      - admin
+  /admin/protocols/{id}:
+    get:
+      description: |-
+        This will list all available protocols in system including their corresponding tasks and their dependencies.
+        Method should not be used by regular users, because we do not want to allow them to see full list of tasks
+      parameters:
+      - description: Protocols ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Protocol details
+          schema:
+            $ref: '#/definitions/main.ProtocolResponseAdmin'
+        "500":
+          description: Error message
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Shows protocol details with tasks
+      tags:
+      - protocol
+      - admin
+  /protocols:
+    get:
+      description: |-
+        This will list all available protocols in system including their corresponding tasks and their dependencies.
+        Method should not be used by regular users, because we do not want to allow them to see full list of tasks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Full list of protocols
+          schema:
+            items:
+              $ref: '#/definitions/main.ProtocolResponse'
+            type: array
+        "500":
+          description: Error message
+          schema:
+            type: string
+      summary: Shows list of available protocols
+      tags:
+      - protocol
+  /protocols/{id}:
+    get:
+      description: |-
+        This will list all available protocols in system including their corresponding tasks and their dependencies.
+        Method should not be used by regular users, because we do not want to allow them to see full list of tasks
+      parameters:
+      - description: Protocols ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Protocol details
+          schema:
+            $ref: '#/definitions/main.ProtocolResponse'
+        "500":
+          description: Error message
+          schema:
+            type: string
+      summary: Shows protocols details
+      tags:
+      - protocol
+  /protocols/{id}/roles:
+    get:
+      parameters:
+      - description: Protocol ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: All roles available in protocol
+          schema:
+            items:
+              type: string
+            type: array
+        "500":
+          description: Error message
+          schema:
+            type: string
+      summary: Shows list of available roles for specified protocol
+      tags:
+      - protocol
+  /protocols/progress:
+    get:
+      parameters:
+      - description: Startup ID
+        in: query
+        name: startup_id
+        type: integer
+      - description: Startup Vanity
+        in: query
+        name: startup_vanity
+        type: string
+      - description: 1|0 show tasks without content
+        in: query
+        name: skip_content
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.ProtocolProgress'
+        "500":
+          description: Error message
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get protocol for startup by its id or vanity
+      tags:
+      - protocol
+  /startup/{startup_id}/assign-protocol:
+    post:
+      parameters:
+      - description: Startup ID
+        in: path
+        name: startup_id
+        required: true
+        type: integer
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/main.assignProtocolRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Error message
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Assign protocol to startup
+      tags:
+      - protocol
+  /startup/{startup_id}/protocol-task/{task_id}:
+    patch:
+      parameters:
+      - description: Startup ID
+        in: path
+        name: startup_id
+        required: true
+        type: integer
+      - description: Task ID
+        in: path
+        name: task_id
+        required: true
+        type: integer
+      - description: Request data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/main.completeTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Error message
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Mark task as complete
+      tags:
+      - protocol
+  /startup/{startup_id}/role/{role_id}/protocol-roles:
+    post:
+      parameters:
+      - description: Startup ID
+        in: path
+        name: startup_id
+        required: true
+        type: integer
+      - description: Role ID
+        in: path
+        name: role_id
+        required: true
+        type: integer
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/main.assignProtocolRolesRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Error message
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Assign protocol-roles to startup-role
+      tags:
+      - protocol
+  /startups:
+    get:
+      parameters:
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.ListResponse-main_StartupResponse'
+            type: array
+        "500":
+          description: Error message
+          schema:
+            type: string
+      summary: Startup list
+      tags:
+      - startup
+  /startups/details:
+    get:
+      parameters:
+      - description: Startup ID
+        in: query
+        name: id
+        type: integer
+      - description: Startup Vanity
+        in: query
+        name: vanity
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.StartupResponse'
+        "500":
+          description: Error message
+          schema:
+            type: string
+      summary: Startup details
+      tags:
+      - startup
+securityDefinitions:
+  ApiKeyAuth:
+    description: Description for what is this security definition being used
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

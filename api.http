@@ -1,0 +1,126 @@
+### List available protocols
+GET http://localhost:8080/protocols
+Authorization: Bearer key_for_user_1
+Accept: application/json
+
+### Protocol roles
+GET http://localhost:8080/protocols/1/roles
+Authorization: Bearer key_for_user_1
+Accept: application/json
+
+### Add protocol
+POST http://localhost:8080/protocols
+Authorization: Bearer key_for_user_2
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Star tech"
+}
+
+### Add protocol as guest
+POST http://localhost:8080/protocols
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Star tech"
+}
+
+### Add protocol as unauthorized user
+POST http://localhost:8080/protocols
+Authorization: Bearer key_for_user_1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Star tech"
+}
+
+
+
+
+### Add tasks to protocol protocol
+POST http://localhost:8080/protocols
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer key_for_user_1
+
+{
+  "id": 0,
+  "name": "fintech",
+  "tasks": [
+    {
+      "startupRole": "webdeveloper",
+      "title": "Develop website code",
+      "content": "some content goes here",
+      "dependsOn": [],
+      "complete_fn": ""
+    },
+    {
+      "startupRole": "designer",
+      "title": "Design website",
+      "content": "some content goes here",
+      "dependsOn": [],
+      "complete_fn": ""
+    }
+  ]
+}
+
+
+### Startup protocol struct
+GET http://localhost:8080/startup-protocol?startup_id=1
+Authorization: Bearer key_for_user_1
+Accept: application/json
+
+### Startup protocol struct
+GET http://localhost:8080/startup-protocol?startup_vanity=vanya
+Authorization: Bearer key_for_user_1
+Accept: application/json
+
+### Startup protocol struct
+GET http://localhost:8080/pending-tasks?startup_id=1&user_id=1
+Authorization: Bearer key_for_user_1
+Accept: application/json
+
+### Startup protocol struct
+POST http://localhost:8080/complete
+Authorization: Bearer key_for_user_1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "startup_id": 1,
+  "task_id": 4,
+  "user_id": 2
+}
+
+### List available protocols
+GET http://localhost:8080/startup?id=557
+Authorization: Bearer key_for_user_1
+Accept: application/json
+
+### Assign protocol to startup
+POST http://localhost:8080/assign-protocol
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer key_for_user_1
+
+{
+  "startup_id": 1,
+  "protocol_id": 2
+}
+
+### Assign protocol roles to startup role
+POST http://localhost:8080/assign-protocol-roles
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer key_for_user_1
+
+{
+  "startup_id": 557,
+  "role_id": 1666,
+  "protocol_roles": ["role1","role2","role3"]
+}
+
+
